@@ -1,0 +1,483 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Grafos Tech - Situação das entregas, pedidos e paradas - Em desenvolvimento (contratos e endpoints podem ser alterado)",
+    "version": "v1",
+    "description": "Passo a passo para obter a situação da entrega ou pedido:<br/><br/> 1 - Utilizando o server URL Microservices, faça a requisição na /api/Backend e armazene a URL retornada para uso posterior. (Obs: Sugerimos realizar essa requisição uma vez ao dia pois a URL retornada pode ser alterada.) <br/> 2 - Com a URL do passo anterior em mãos, faça a requisição de login e armezene o token retornado.(Obs: Esse token expira sempre após a meia noite.)<br/> 3 - Realize as requisições necessárias utilizando o token nos headers da requisição com a palavra bearer antes do mesmo (Exemplo: Bearer u797ihf65898sd7841d7sfsdf)<br/><br/> E-mail para suporte: contato@grafostech.com.br <br/> Telefone: (47) 98920-0000 (Whatsapp)  <br/><br/> Observação: Caso não possua um usuário e senha para acesso, solicitar a criação para o cliente ou para o suporte Grafos Tech."
+  },
+  "servers": [
+    {
+      "url": "https://container-app-prod-ms-backend.proudsand-a95781db.eastus.azurecontainerapps.io",
+      "description": "Prod"
+    },
+    {
+      "url": "https://api.grafostech.com.br",
+      "description": "Url Microservices"
+    }
+  ],
+  "paths": {
+    "/api/Backend": {
+      "get": {
+        "tags": [
+          "Microservices"
+        ],
+        "summary": "Pega a URL do Backend para realizar as outras operações.",
+        "description": "Este endpoint é utilizado para retornar a URL sempre atualizada do backend para que o mesmo possa ser usado nas operaçõs seguintes. Indicamos atualizar a URL do backend uma vez por dia.<br/><br/>Indicamos sempre usar a URL (https://api.grafostech.com.br) neste endpoint.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UrlBackend"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Entregas/SituacaoPorNfPedido": {
+      "post": {
+        "tags": [
+          "Entregas"
+        ],
+        "summary": "Obtem a situação da entrega, filtrando pelo numero do pedido ou NF - Em desenvolvimento (contrato pode ser alterado)",
+        "description": "",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Monitoramento_Backend.FiltroEntregaSituacaoPorNfPedido"
+              },
+              "examples": {
+                "Exemplo 1 - Com chave": {
+                  "value": {
+                    "chave": "15698186198181947861891"
+                  }
+                },"Exemplo 2 - Numero da NF/pedido": {
+                  "value": {
+                    "numeroNf": "15.814.8"
+                  }
+                },"Exemplo 3 - Com ID externo": {
+                  "value": {
+                    "idExterno": "15.814.8-lote1"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultEntregas"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultApi"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Entregas/SituacaoPorCliente": {
+      "post": {
+        "tags": [
+          "Entregas"
+        ],
+        "summary": "Obtem a situação das últimas entregas, filtrando pelo cliente - Em desenvolvimento (contrato pode ser alterado)",
+        "description": "",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Monitoramento_Backend.FiltroEntregaSituacaoPorCliente"
+              },
+              "examples": {
+                "Exemplo 1 - Por cnpj": {
+                  "value": {
+                    "cnpj": "4878456489445616578",
+                    "pagina": 1
+                  }
+                },
+                "Exemplo 2 - Por cpf": {
+                  "value": {
+                    "cpf": "001251818",
+                    "pagina": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultEntregasPorCliente"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro",
+            "content": {
+              "text/plain": {
+                "example": "Mensagem de retorno"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Evidencias/GetById": {
+      "post": {
+        "tags": [
+          "Evidencias"
+        ],
+        "summary": "Obtem a imagem da evidencia - Em desenvolvimento (contrato pode ser alterado)",
+        "description": "",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Monitoramento_Backend.Models.EvidenciaFiltro"
+              },
+              "examples": {
+                "Exemplo 1": {
+                  "value": {
+                    "id": "281891"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultApi"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Erro",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultApi"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Users/login": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Realizar login para gerar o token bearer de autenticação.",
+        "description": "Tomar cuidado com a expiração do token (Expira meia noite).",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Monitoramento_Backend.Models.User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserReturn"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UrlBackend": {
+        "type": "object",
+        "properties": {
+          "Backend": {
+            "type": "string",
+            "default": "https://container-app-prod-ms-backend.proudsand-a95781db.eastus.azurecontainerapps.io"
+          }
+        }
+      },
+      "UserReturn": {
+        "type": "object",
+        "properties": {
+          "Token": {
+            "type": "string",
+            "default": "9yghsudffasiud0f8s9odj5sdf5s6df46sd7"
+          }
+        }
+      },
+      "Monitoramento_Backend.Models.EvidenciaFiltro": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Monitoramento_Backend.Models.Evidencias": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "format": "double"
+          },
+          "data": {
+            "type": "string",
+            "nullable": true
+          },
+          "nome": {
+            "type": "string",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "string",
+            "nullable": true
+          },
+          "longitude": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Monitoramento_Backend.Models.MotivosDevolucao": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "format": "double"
+          },
+          "titulo": {
+            "type": "string",
+            "nullable": true
+          },
+          "descricao": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Monitoramento_Backend.Models.User": {
+        "required": [
+          "empresaId",
+          "userName"
+        ],
+        "type": "object",
+        "properties": {
+          "userName": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Monitoramento_Backend.FiltroEntregaSituacaoPorCliente": {
+        "type": "object",
+        "properties": {
+          "cpf": {
+            "type": "string",
+            "nullable": true
+          },
+          "cnpj": {
+            "type": "string",
+            "nullable": true
+          },
+          "pagina": {
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Monitoramento_Backend.FiltroEntregaSituacaoPorNfPedido": {
+        "type": "object",
+        "properties": {
+          "chave": {
+            "type": "string",
+            "nullable": true
+          },
+          "numeroNf": {
+            "type": "string",
+            "nullable": true
+          },
+          "idExterno": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Monitoramento_Backend.Models_API.ResultApi": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCodeHttp": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Monitoramento_Backend.Models_API.ResultEntregasPorCliente": {
+        "type": "object",
+        "properties": {
+          "cnpj": {
+            "type": "string",
+            "nullable": true
+          },
+          "cpf": {
+            "type": "string",
+            "nullable": true
+          },
+          "pagina": {
+            "type": "integer",
+            "nullable": true
+          },
+          "registrosRetornados": {
+            "type": "integer",
+            "nullable": true
+          },
+          "entregas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Monitoramento_Backend.Models_API.ResultEntregas"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Monitoramento_Backend.Models_API.ResultEntregas": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "chave": {
+            "type": "string",
+            "nullable": true
+          },
+          "numeroNf": {
+            "type": "string",
+            "nullable": true
+          },
+          "idExterno": {
+            "type": "string",
+            "nullable": true
+          },
+          "situacao": {
+            "type": "string",
+            "nullable": true
+          },
+          "dataRealizada": {
+            "type": "string",
+            "nullable": true
+          },
+          "comentarioDoMotorista": {
+            "type": "string",
+            "nullable": true
+          },
+          "dataInicio": {
+            "type": "string",
+            "nullable": true
+          },
+          "dataFim": {
+            "type": "string",
+            "nullable": true
+          },
+          "tempoParado": {
+            "type": "string",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "string",
+            "nullable": true
+          },
+          "longitude": {
+            "type": "string",
+            "nullable": true
+          },
+          "motivosDevolucao": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Monitoramento_Backend.Models.MotivosDevolucao"
+            },
+            "nullable": true
+          },
+          "evidencias": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Monitoramento_Backend.Models.Evidencias"
+            },
+            "nullable": true
+          }
+          
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "apiKey",
+        "description": "Inserir o token JWT com Bearer",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "Bearer": []
+    }
+  ]
+}
